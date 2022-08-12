@@ -7,14 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class NoteAdapter extends ArrayAdapter {
+public class NoteAdapter extends ArrayAdapter implements Filterable {
     public NoteAdapter(Activity context, ArrayList<Note> Notes){
 
         super(context, 0, Notes);
@@ -64,4 +67,6 @@ public class NoteAdapter extends ArrayAdapter {
 
         return listItemView;
     }
+
+
 }

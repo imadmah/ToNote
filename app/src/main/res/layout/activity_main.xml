@@ -5,30 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-
-    <EditText
+    <SearchView
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="12dp"
         android:background="@drawable/backgroud_edit"
         android:backgroundTint="#CCC4C4C4"
-        android:drawableRight="@android:drawable/ic_menu_search"
         android:fontFamily="@font/roboto"
-        android:hint=" Find your task"
+        android:queryHint="Find your Note"
         android:textColorHint="#000120"
         android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="12dp"
-        android:layout_marginTop="4dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="6.0sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,6 +41,7 @@
         android:backgroundTint="#C4C4C4"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_input_add"
+
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"

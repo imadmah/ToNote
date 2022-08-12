@@ -9,28 +9,31 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
     static ArrayList<Note> notes= new ArrayList<>();
     static NoteAdapter noteAdapter;
+    NoteAdapter filteredadapter;
+    static   ArrayList<Note>   filterednotes;
+    static boolean filtered_list ;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,9 +61,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ListView listView = findViewById(R.id.listView);
+
+        SearchView search_bar =findViewById(R.id.search_bar);
+
         LoadData();
 
+           filterednotes = new ArrayList<>();
+         filteredadapter= new NoteAdapter(this,filterednotes);
         noteAdapter = new NoteAdapter(this,notes);
         listView.setAdapter(noteAdapter);
 
@@ -72,6 +81,55 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("noteId", i);
                 startActivity(intent);
 
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    case SCROLL_STATE_IDLE:
+                        //scroll was stopped, let's show search bar again
+
+                        break;
+                    case SCROLL_STATE_TOUCH_SCROLL:
+                        //user is scrolling, let's hide search bar
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem > 0) {
+                    //user scrolled down, first element is hidden
+                    search_bar.setVisibility(View.GONE);
+                }
+                if(firstVisibleItem==0) search_bar.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filteredadapter.clear();
+
+                if(!s.isEmpty()){
+                    Filter_List(s);
+                    filtered_list=true;
+                    listView.setAdapter(filteredadapter);
+                }
+                else {
+                    listView.setAdapter(noteAdapter);
+                }
+                return false;
             }
         });
 
@@ -101,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
     }
+
+
     private void LoadData(){
       SharedPreferences sharedPreferences = getSharedPreferences("com.example.note", Context.MODE_PRIVATE);
       Gson gson= new Gson();
@@ -110,10 +170,26 @@ public class MainActivity extends AppCompatActivity {
       if (notes == null) notes.add(new Note("EXMPLE","EXMPLE"));
 
     }
-
     public void add_note(View view) {
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
         startActivity(intent);
+
+    }
+    public void Filter_List(String Sequence){
+
+        for(Note note:notes){
+            try {
+                    if(note.getHeader().toLowerCase().contains(Sequence.toLowerCase()) || note.getnote_text().toLowerCase().contains(Sequence))
+                        if(!filterednotes.contains(note)) filterednotes.add(note);
+                    filteredadapter.notifyDataSetChanged();
+
+                }
+                catch (Exception e ){}
+            }
+
+
+
+
 
     }
 }
