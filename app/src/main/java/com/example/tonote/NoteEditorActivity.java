@@ -129,14 +129,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json =gson.toJson(MainActivity.notes);
         sharedPreferences.edit().putString("note",json).apply();
+             }
+     }
 
-    }}
-      private boolean Note_isempty(){
-          if(MainActivity.notes.get(noteId).getnote_text()==null & MainActivity.notes.get(noteId).getHeader()==null)
-              return true;
-          else return false ;
-
-      }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
