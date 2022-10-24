@@ -5,9 +5,16 @@
       <map>
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.178" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/drawable/backgroud_edit.xml" value="0.178" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/drawable/background_edit_email_passw.xml" value="0.1565" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1565" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/font/roboto.xml" value="0.28020833333333334" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_create_account.xml" value="0.25" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_note_editor.xml" value="0.25" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_sing_up.xml" value="0.25" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/activity_spalsh.xml" value="0.25" />
+        <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/createacount_activity.xml" value="0.25" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/layout/my_note_item.xml" value="0.264" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/menu/add_note_menu.xml" value="0.25" />
         <entry key="..\:/Users/MY-PC/AndroidStudioProjects/ToNote/app/src/main/res/xml/searchable.xml" value="0.4521484375" />

@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.import_button:
-
             case R.id.export_button:
         }
 
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem > 0) {
                     //user scrolled down, first element is hidden
-                    search_bar.setVisibility(View.GONE);
+                   // search_bar.setVisibility(View.GONE);
                 }
                 if(firstVisibleItem==0) search_bar.setVisibility(View.VISIBLE);
 
