@@ -4,7 +4,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Note {
+public class Note implements Comparable<String> {
 
         private String note_text ;
         private String header ;
@@ -19,9 +19,10 @@ public class Note {
     }
 
     public Note(){}
-        public Note(String note_text, String header) {
+        public Note(String note_text, String header,String Date) {
             this.note_text = note_text;
             this.header = header;
+            this.Date= Date;
         }
 
 
@@ -39,6 +40,13 @@ public class Note {
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    @Override
+    public int compareTo(String s) {
+        if(header.compareTo(s)>0) return 1;
+        else if(header.compareTo(s)<0)  return -1;
+        return 0;
     }
 }
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "75985374954",
+    "project_id": "tonote-8e131",
+    "storage_bucket": "tonote-8e131.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75985374954:android:90e0d7ef842f454ee7d193",
+        "android_client_info": {
+          "package_name": "com.example.tonote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75985374954-kljma936fvq8ggu4c4sjko6b1r70vbrs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATXNrc4C8ZRnzPXTpPEYmvGa_w7gXKDbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75985374954-kljma936fvq8ggu4c4sjko6b1r70vbrs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

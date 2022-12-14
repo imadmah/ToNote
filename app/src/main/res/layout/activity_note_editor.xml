@@ -5,48 +5,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NoteEditorActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginVertical="6dp"
+    android:gravity="center">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
     <TextView
         android:id="@+id/note_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="19:00"
-        android:layout_marginTop="12dp"
-        android:textSize="14sp"
-        android:layout_marginStart="24dp"
-        android:layout_gravity="start"/>
+        android:layout_alignParentLeft="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+
+        android:padding="6dp"
+
+        />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/Delete_note_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Delete Note"
+            android:textSize="14sp"
+            android:padding="2dp"
+            android:background="@drawable/button_background"
+            android:textStyle="bold"
+
+            />
+    </RelativeLayout>
+
     <EditText
         android:id="@+id/note_edit_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/note_background"
         android:ems="12"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="18dp"
-        android:background="@null"
-
-
-
         android:fontFamily="@font/roboto"
-        android:gravity="top|left"
-        android:hint="Title"
+        android:gravity="start"
 
+        android:hint=" Title"
         android:inputType="text"
         android:maxLines="1"
-        android:textSize="26sp"
+        android:padding="8dp"
+        android:textColorHint="#757575"
+        android:textSize="26sp" />
 
-        />
     <EditText
         android:id="@+id/note_edit_text"
         android:layout_width="match_parent"
-        android:hint="type here"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:background="@null"
+        android:background="@drawable/note_background"
         android:fontFamily="@font/roboto"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="24dp"
-        android:gravity="top|left"
+        android:gravity="top|start"
+        android:hint="  type here"
         android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:textColorHint="#757575"
+        android:textSize="18sp"
          />
+
+
+
+
 </LinearLayout>

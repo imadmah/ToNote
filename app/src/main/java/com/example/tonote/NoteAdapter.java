@@ -1,72 +1,77 @@
 package com.example.tonote;
 
-import android.app.Activity;
+
+import static com.example.tonote.Utility.AdjustHeaderContent;
+
+import android.content.Context;
+import android.content.Intent;
+
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import java.io.File;
 import java.util.ArrayList;
 
-public class NoteAdapter extends ArrayAdapter implements Filterable {
-    public NoteAdapter(Activity context, ArrayList<Note> Notes){
+public class NoteAdapter extends FirestoreRecyclerAdapter<Note,NoteAdapter.NoteViewHolder> {
+    Context context;
 
-        super(context, 0, Notes);
+    public NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options,Context context) {
+        super(options);
+        this.context=context;
     }
 
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    @Override
+    protected void onBindViewHolder(@NonNull NoteViewHolder holder, int position, @NonNull Note note) {
+        System.out.println(note);
+        holder.Date_text.setText(note.getDate());
+        holder.content.setText(note.getnote_text());
+        holder.header.setText(note.getHeader());
+        AdjustHeaderContent(holder.header,holder.content);
+        holder.itemView.setOnClickListener((v)->{
+            Intent intent =new Intent(context,NoteEditorActivity.class);
+            intent.putExtra("title",note.getHeader());
+            intent.putExtra("content",note.getnote_text());
+            intent.putExtra("Date",note.getDate());
+            String docId =this.getSnapshots().getSnapshot(position).getId();
+            intent.putExtra("docId",docId);
+            context.startActivity(intent);
 
-        View listItemView = convertView;
-        if(listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.my_note_item ,parent, false);
-         }
-
-        // Get the {@link AndroidFlavor} object located at this position in the list
-        Note currentNote = (Note) getItem(position);
-
-
-        // Find the TextView in the list_item.xml layout with the ID version_name
-        TextView header = listItemView.findViewById(R.id.header);
-        header.setText(currentNote.getHeader());
-
-        // Find the TextView in the list_item.xml layout with the ID version_number
-        TextView First_line = listItemView.findViewById(R.id.note_Text);
-        First_line.setText(currentNote.getnote_text());
-
-        TextView Date_text= listItemView.findViewById(R.id.date_text);
-        Date_text.setText(currentNote.getDate());
-
-        if(header.getText().toString().isEmpty()) {
-            header.setVisibility(View.GONE);
-            First_line.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            First_line.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-
-        }
-        else{
-            header.setVisibility(View.VISIBLE);
-            First_line.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-            First_line.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        }
-        if(First_line.getText().toString().isEmpty()) {
-            First_line.setVisibility(View.GONE);
-        }
-        else{
-            First_line.setVisibility(View.VISIBLE);
-
-        }
-
-        return listItemView;
+        });
     }
+
+    @NonNull
+    @Override
+    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view =LayoutInflater.from(parent.getContext()).inflate(R.layout.my_note_item,parent,false);
+        return new NoteViewHolder(view);
+    }
+
+    class NoteViewHolder extends RecyclerView.ViewHolder{
+
+        TextView content;
+        TextView Date_text;
+        TextView header;
+        public NoteViewHolder(@NonNull View itemView){
+            super(itemView);
+            content = itemView.findViewById(R.id.note_Text);
+            Date_text= itemView.findViewById(R.id.date_text);
+            header = itemView.findViewById(R.id.header);
+        }
+
+
+    }
+
 
 
 }

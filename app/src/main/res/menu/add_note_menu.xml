@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/add_note" android:title="Add note"></item>
-    <item android:id="@+id/import_button" android:title="Import" />
-    <item android:id="@+id/export_button" android:title="Export" />
-    <item android:id="@+id/Sort" android:title="Sort" />
+
+    <item android:id="@+id/Sort" android:title="Sort" >
+        <menu>
+            <item android:id="@+id/bydate" android:title="ByDateCreated"/>
+            <item android:id="@+id/bytitle" android:title="ByTitle"/>
+        </menu>
+
+
+    </item>
+    <item android:id="@+id/logout_button" android:title="Logout" />
 </menu>

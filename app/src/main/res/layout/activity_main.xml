@@ -5,45 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <SearchView
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="@drawable/backgroud_edit"
-        android:backgroundTint="#CCC4C4C4"
-        android:fontFamily="@font/roboto"
-        android:queryHint="Find your Note"
-        android:textColorHint="#000120"
-        android:padding="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+
+          <SearchView
+              android:id="@+id/search_bar"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:layout_margin="12dp"
+              android:inputType="text"
+              android:background="@drawable/backgroud_edit"
+              android:backgroundTint="#DFD3C3"
+              android:fontFamily="@font/roboto"
+              android:queryHint="Find your Note"
+              android:textColorHint="#000120"
+              android:padding="6dp"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              />
 
 
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="12dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="6.0sp"
-        android:layout_marginBottom="24dp"
-        android:paddingBottom="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/recycle_view"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="6dp"
+              android:divider="@android:color/transparent"
+              android:dividerHeight="6.0sp"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/search_bar"
+              />
+
+
+
+
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_btn"
         android:onClick="add_note"
         android:layout_width="wrap_content"
-        android:backgroundTint="#C4C4C4"
+        app:backgroundTint="#DFD3C3"
+        tools:background="@color/white"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_input_add"
-
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
