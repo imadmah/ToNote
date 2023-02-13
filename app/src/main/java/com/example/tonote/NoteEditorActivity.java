@@ -1,5 +1,8 @@
 package com.example.tonote;
 
+import static com.example.tonote.MainActivity.noteAdapter;
+import static com.example.tonote.NoteAdapter.list;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,13 +47,9 @@ public class NoteEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_editor);
-
          note_content = findViewById(R.id.note_edit_text);
          note_header =findViewById(R.id.note_edit_header);
          note_date = findViewById(R.id.note_date);
-
-
-
         ActionBar actionBar = getSupportActionBar();
         // showing the back button in action bar
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -107,7 +106,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         // Fetch data that is passed from NoteAdapter  //
         //                                              //
         Intent intent = getIntent();
-         noteId = intent.getStringExtra("docId");
+        noteId = intent.getStringExtra("docId");
         content = intent.getStringExtra("content");
         title = intent.getStringExtra("title");
         DateCreated=intent.getStringExtra("Date");
@@ -150,6 +149,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         if(!NoteisDeleted) {
             Note note = new Note(note_content.getText().toString(), note_header.getText().toString(), note_date.getText().toString());
             if (!note.getHeader().equals("") || !note.getnote_text().equals("")) {
+                list.add(note);
+                noteAdapter.notifyDataSetChanged();
+
                 SaveNoteInFireBase(note);
             }
         }
