@@ -1,7 +1,9 @@
 package com.example.tonote;
 
 
+
 import static com.example.tonote.Utility.AdjustHeaderContent;
+
 import static com.example.tonote.Utility.getCollectionReferenceForNotes;
 
 import android.content.Context;
@@ -25,7 +27,9 @@ import java.util.ArrayList;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     Context context;
-     static ArrayList<Note> list;
+    //List of Notes That are saved locally //
+    //                                     //
+     ArrayList<Note> list = new ArrayList<>();
 
     public NoteAdapter(Context context,ArrayList<Note> list ) {
         this.context=context;
@@ -34,6 +38,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         @Override
         public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+        if(list!=null){
             Note note =list.get(position);
             holder.Date_text.setText(note.getDate());
             holder.content.setText(note.getnote_text());
@@ -44,13 +49,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 intent.putExtra("title",note.getHeader());
                 intent.putExtra("content",note.getnote_text());
                 intent.putExtra("Date",note.getDate());
-
-                String docId = String.valueOf(position);
-                intent.putExtra("docId",docId);
+                intent.putExtra("Position",position);
                 context.startActivity(intent);
 
             });
-    }
+    }}
 
     @NonNull
     @Override

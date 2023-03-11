@@ -1,7 +1,11 @@
 package com.example.tonote;
 
+
+import static com.example.tonote.MainActivity.Notes;
+import static com.example.tonote.MainActivity.Notes_Firebase;
+import static com.example.tonote.MainActivity.Notes_local;
 import static com.example.tonote.MainActivity.noteAdapter;
-import static com.example.tonote.NoteAdapter.list;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -10,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +28,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.model.Document;
 import com.google.gson.Gson;
@@ -34,14 +43,18 @@ import java.util.HashSet;
 public class NoteEditorActivity extends AppCompatActivity {
     String noteId,content,title,DateCreated;
     Button Delete_note_btn ;
+    ArrayList<Note> Note_Not_Saved_INFireBase = new ArrayList<>() ;
     //
     Date currentTime = Calendar.getInstance().getTime();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM hh:mm");
+
     String currentDate = simpleDateFormat.format(currentTime);
     //
     Boolean isEditedMode=false,NoteisDeleted=false;
     EditText note_header;
     TextView note_date;
+    private Note note;
+    int position;
     EditText note_content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,74 +63,50 @@ public class NoteEditorActivity extends AppCompatActivity {
          note_content = findViewById(R.id.note_edit_text);
          note_header =findViewById(R.id.note_edit_header);
          note_date = findViewById(R.id.note_date);
+        Delete_note_btn =findViewById(R.id.Delete_note_txt);
         ActionBar actionBar = getSupportActionBar();
         // showing the back button in action bar
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
-        Delete_note_btn =findViewById(R.id.Delete_note_txt);
-
-       /* note_content.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                MainActivity.notes.get(noteId).setDate(currentDate);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                MainActivity.notes.get(noteId).setnote_text(charSequence.toString());
-                MainActivity.noteAdapter.notifyDataSetChanged();
-                SaveData(MainActivity.notes.get(noteId));
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
-        note_header.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                MainActivity.notes.get(noteId).setHeader(charSequence.toString());
-                MainActivity.noteAdapter.notifyDataSetChanged();
-
-                SaveData(MainActivity.notes.get(noteId));
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-
-            }
-        });
-*/
-
-        Delete_note_btn.setOnClickListener(v->{DeleteNoteFromFirebase();});
-
-
-
+        Delete_note_btn.setOnClickListener(v-> DeleteNoteFromFirebase());
 
         // Fetch data that is passed from NoteAdapter  //
         //                                              //
         Intent intent = getIntent();
-        noteId = intent.getStringExtra("docId");
-        content = intent.getStringExtra("content");
-        title = intent.getStringExtra("title");
-        DateCreated=intent.getStringExtra("Date");
-        note_content.setText(content);
-        note_header.setText(title);
-        if(noteId!=null && !noteId.isEmpty() ) isEditedMode=true;
-        if(!isEditedMode) note_date.setText(currentDate);
-         else note_date.setText(DateCreated);
+
+        try {
+            content = intent.getStringExtra("content");
+            title = intent.getStringExtra("title");
+            DateCreated=intent.getStringExtra("Date");
+            note_content.setText(content);
+            note_header.setText(title);
+            position = intent.getIntExtra("Position",-1);
+            if(position!=-1) noteId = Notes.get(position).getDocId();
+            if( !noteId.isEmpty() || noteId!=null ){
+                isEditedMode=true;
+                Log.println(Log.ERROR,"NoDocId","not retrieved"+noteId);
+            }
+            if(!isEditedMode) note_date.setText(currentDate);
+            else note_date.setText(DateCreated);
+        }
+        catch (Exception e){
+            Log.println(Log.ERROR,"Error","java.lang.NumberFormatException");
+
+        }
+        finally {
+            Log.println(Log.ERROR,"Position", String.valueOf(position));
+        }
+
 
 
     }
+    // Creating Object of SharedPreferences to store data in the phone//
+   /* public void SaveDataLocally(Note note){
+        if(note!=null){
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.note", Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json =gson.toJson(Notes_local);
+            sharedPreferences.edit().putString("notes",json).apply();
+        }}*/
 
     //TODO :
     //add the offline delete  //
@@ -126,35 +115,51 @@ public class NoteEditorActivity extends AppCompatActivity {
     private void DeleteNoteFromFirebase() {
         DocumentReference documentReference;
         if(isEditedMode){
-            //Update the Note
+            //Delete the Note
             documentReference =Utility.getCollectionReferenceForNotes().document(noteId);
+            Notes_Firebase.remove(position);
+            NoteisDeleted=true;
+            Utility.ShowToast(NoteEditorActivity.this,"Note deleted Locally");
         }
         else return;
 
         documentReference.delete().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
+                Notes.remove(position);
                 Utility.ShowToast(NoteEditorActivity.this,"Note deleted successfully");
-                NoteisDeleted=true;
+
                 finish();
             }
             else Utility.ShowToast(NoteEditorActivity.this,"Failed to deleted the note ");
         });
+        finish();
     }
 
 
 
     //                                                                //
-    // Creating Object of SharedPreferences to store data in the phone//
-      public void SaveData(){
-        if(!NoteisDeleted) {
-            Note note = new Note(note_content.getText().toString(), note_header.getText().toString(), note_date.getText().toString());
-            if (!note.getHeader().equals("") || !note.getnote_text().equals("")) {
-                list.add(note);
-                noteAdapter.notifyDataSetChanged();
 
+      public void SaveData(){
+          note = new Note(note_content.getText().toString(), note_header.getText().toString(), note_date.getText().toString());
+        if(!NoteisDeleted  ) {
+            if(!Note_exist(note) & !Note_empty(note)){
+
+                if(isEditedMode) {  // In Case of editing the note  //
+                    Notes_Firebase.add(position, note);
+                    Notes.add(position, new Note_Doc(note, Notes.get(position).getDocId()));
+                }
+               else         Notes_Firebase.add(note);
+
+                Log.println(Log.ERROR,note.getnote_text().toString(),note.getHeader().toString());
+                // SaveDataLocally(note);
                 SaveNoteInFireBase(note);
-            }
+
         }
+            //In Case of Emptying the Note //
+            if(Note_empty(note) ) DeleteNoteFromFirebase();
+        }
+
+
      }
 
     private void SaveNoteInFireBase(Note note) {
@@ -165,10 +170,12 @@ public class NoteEditorActivity extends AppCompatActivity {
         }else{
             //Create new Note
             documentReference =Utility.getCollectionReferenceForNotes().document();
+            Notes.add(new Note_Doc(note,documentReference.getId()));
         }
 
         documentReference.set(note).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
+
                 Utility.ShowToast(NoteEditorActivity.this,"Note added successfully");
                 finish();
             }
@@ -189,6 +196,23 @@ public class NoteEditorActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        noteAdapter.notifyDataSetChanged();
         SaveData();
     }
+    private boolean Note_empty(Note note ){
+        if(!note.getHeader().equals("") || !note.getnote_text().equals(""))
+                return false;
+        else return true   ;
+
+    }
+
+    private boolean Note_exist(Note note){
+        for (Note NoteCompared :Notes_Firebase ) {
+            if(NoteCompared.equals(note)) return true;
+        }
+        return false ;
+
+    }
+
+
 }

@@ -1,9 +1,14 @@
 package com.example.tonote;
 
 import static android.content.ContentValues.TAG;
-import static com.example.tonote.Utility.getCollectionReferenceForNotes;
 
+
+import static com.example.tonote.Utility.getCollectionReferenceForNotes;
+import static com.example.tonote.Utility.retrieveDataFromFirestore;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,16 +40,22 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import 	com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseReference database;
-   static NoteAdapter noteAdapter;
+  static   NoteAdapter noteAdapter;
+    //LIST OF NOTES THAT RETRIEVED FROM FIREBASE //
+    //                                           //
+    static ArrayList<Note_Doc>  Notes = new ArrayList<>();
+    static ArrayList<Note>  Notes_local = new ArrayList<>();
+    static ArrayList<Note>  Notes_Firebase = new ArrayList<>();
+
     RecyclerView recyclerView;
-    ArrayList<Note> list ;
     private String SortOrder="";
 
 
@@ -72,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.bytitle: SortOrder="header";
                 return true;
             case R.id.bydate: SortOrder="Date";
-            return true;
+                return true;
 
         }
 
@@ -81,30 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycle_view);
-        SearchView search_bar = findViewById(R.id.search_bar);
-        list = new ArrayList<>();
+
         setupRecycleView();
-        /*database = FirebaseDatabase.getInstance().getReference("my_notes");
+      //  SearchView search_bar = findViewById(R.id.search_bar);
+        //if(LoadData())
 
-        database.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Note note =dataSnapshot.getValue(Note.class);
-                    list.add(note);
-                }
-                noteAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
 
 
 
@@ -118,32 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });*/
-
-
-
-          /*
-        search_bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filteredadapter.clear();
-
-                if(!s.isEmpty()){
-                    Filter_List(s);
-                    filtered_list=true;
-                    listView.setAdapter(filteredadapter);
-                }
-                else {
-                    listView.setAdapter(noteAdapter);
-                }
-                return false;
-            }
-        });
-*/
 
           /*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -173,67 +145,38 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 */
-    }
-  /*  private void LoadData(){
-      SharedPreferences sharedPreferences = getSharedPreferences("com.example.note", Context.MODE_PRIVATE);
-      Gson gson= new Gson();
-      String json = sharedPreferences.getString("note",null);
-      Type type = new TypeToken<ArrayList<Note>>() {}.getType();
-      if(json!=null)  notes = gson.fromJson(json,type);
-      if (notes == null) notes.add(new Note("EXMPLE","EXMPLE"));
 
-    }*/
+    }
+    // Return true if data is retrieved , else if not data is stored locally return false //
+     /* private boolean LoadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("com.example.note", Context.MODE_PRIVATE);
+        Gson gson= new Gson();
+        String json = sharedPreferences.getString("notes",null);
+        Type type = new TypeToken<ArrayList<Note>>() {}.getType();
+        if(json!=null)  Notes_local = gson.fromJson(json,type);
+         return !Notes_local.isEmpty();
+      }*/
+
+
+     void setupRecycleView(){
+        Notes= retrieveDataFromFirestore();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        noteAdapter=new NoteAdapter(this,Notes_Firebase);
+
+        recyclerView.setAdapter(noteAdapter);}
+
+
     public void add_note(View view) {
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
         startActivity(intent);
 
     }
-   /* public void Filter_List(String Sequence){
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-        for(Note note:notes){
-            try {
-                    if(note.getHeader().toLowerCase().contains(Sequence.toLowerCase()) || note.getnote_text().toLowerCase().contains(Sequence))
-                        if(!filterednotes.contains(note)) filterednotes.add(note);
-                    filteredadapter.notifyDataSetChanged();
-
-                }
-                catch (Exception e ){}
-            }
-
-
-
-
-
-    }*/
-
-    void setupRecycleView(){
-        CollectionReference collection = getCollectionReferenceForNotes();
-
-
-        collection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                    for (DocumentSnapshot document : documents) {
-                        list.add( document.toObject(Note.class));
-                        System.out.println(document.getData());
-                    }
-                }
-                else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        noteAdapter=new NoteAdapter(this,list);
-        recyclerView.setAdapter(noteAdapter);
     }
-
-
 
     @Override
     protected void onResume() {

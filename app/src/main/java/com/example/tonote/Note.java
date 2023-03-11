@@ -4,7 +4,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Note implements Comparable<String> {
+import java.util.Objects;
+
+public class Note  {
 
         private String note_text ;
         private String header ;
@@ -42,11 +44,19 @@ public class Note implements Comparable<String> {
         this.header = header;
     }
 
+
+
     @Override
-    public int compareTo(String s) {
-        if(header.compareTo(s)>0) return 1;
-        else if(header.compareTo(s)<0)  return -1;
-        return 0;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return Objects.equals(note_text, note.note_text) && Objects.equals(header, note.header) && Objects.equals(Date, note.Date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(note_text, header, Date);
     }
 }
 
