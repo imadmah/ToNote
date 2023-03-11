@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -42,8 +43,8 @@ import java.util.HashSet;
 
 public class NoteEditorActivity extends AppCompatActivity {
     String noteId,content,title,DateCreated;
-    Button Delete_note_btn ;
-    ArrayList<Note> Note_Not_Saved_INFireBase = new ArrayList<>() ;
+    ImageView Delete_note_btn ;
+    ArrayList<Note> Note_Not_Saved_INFireBase = new ArrayList<>();
     //
     Date currentTime = Calendar.getInstance().getTime();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM hh:mm");
@@ -66,8 +67,11 @@ public class NoteEditorActivity extends AppCompatActivity {
         Delete_note_btn =findViewById(R.id.Delete_note_txt);
         ActionBar actionBar = getSupportActionBar();
         // showing the back button in action bar
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        Delete_note_btn.setOnClickListener(v-> DeleteNoteFromFirebase());
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        Delete_note_btn.setOnClickListener(view -> DeleteNoteFromFirebase());
+
 
         // Fetch data that is passed from NoteAdapter  //
         //                                              //
@@ -81,20 +85,22 @@ public class NoteEditorActivity extends AppCompatActivity {
             note_header.setText(title);
             position = intent.getIntExtra("Position",-1);
             if(position!=-1) noteId = Notes.get(position).getDocId();
-            if( !noteId.isEmpty() || noteId!=null ){
+
+            // Show the deletebtn and make editmode bool true //
+            if( noteId!=null ){
                 isEditedMode=true;
-                Log.println(Log.ERROR,"NoDocId","not retrieved"+noteId);
+                Delete_note_btn.setVisibility(View.VISIBLE);
             }
+
+            // Set time only when the note is a new one //
             if(!isEditedMode) note_date.setText(currentDate);
             else note_date.setText(DateCreated);
         }
         catch (Exception e){
-            Log.println(Log.ERROR,"Error","java.lang.NumberFormatException");
+            Log.println(Log.ERROR,"Exception",e.fillInStackTrace().toString());
 
         }
-        finally {
-            Log.println(Log.ERROR,"Position", String.valueOf(position));
-        }
+
 
 
 
@@ -150,7 +156,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 }
                else         Notes_Firebase.add(note);
 
-                Log.println(Log.ERROR,note.getnote_text().toString(),note.getHeader().toString());
+                Log.println(Log.ERROR,note.getnote_text(),note.getHeader());
                 // SaveDataLocally(note);
                 SaveNoteInFireBase(note);
 
@@ -200,9 +206,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         SaveData();
     }
     private boolean Note_empty(Note note ){
-        if(!note.getHeader().equals("") || !note.getnote_text().equals(""))
-                return false;
-        else return true   ;
+        return note.getHeader().equals("") && note.getnote_text().equals("");
 
     }
 

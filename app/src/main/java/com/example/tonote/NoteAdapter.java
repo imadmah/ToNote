@@ -27,9 +27,7 @@ import java.util.ArrayList;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     Context context;
-    //List of Notes That are saved locally //
-    //                                     //
-     ArrayList<Note> list = new ArrayList<>();
+     ArrayList<Note> list ;
 
     public NoteAdapter(Context context,ArrayList<Note> list ) {
         this.context=context;
@@ -70,7 +68,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return list.size();
     }
 
-    class NoteViewHolder extends RecyclerView.ViewHolder{
+    static class NoteViewHolder extends RecyclerView.ViewHolder{
 
         TextView content;
         TextView Date_text;

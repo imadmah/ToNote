@@ -28,18 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import 	com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
@@ -93,11 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycle_view);
-
         setupRecycleView();
       //  SearchView search_bar = findViewById(R.id.search_bar);
         //if(LoadData())
@@ -106,45 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-           /*  listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Going from MainActivity to NotesEditorActivity
-                Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
-                intent.putExtra("noteId", i);
-                startActivity(intent);
 
-            }
-        });*/
-
-          /*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            //  a long press on a note a delete page appeare //
-      public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        final int itemToDelete = i;
-             // To delete the data from the App
-       new AlertDialog.Builder(MainActivity.this)
-           .setIcon(android.R.drawable.ic_dialog_alert)
-             .setTitle("Are you sure?")
-             .setMessage("Do you want to delete this note?")
-          .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                 @Override
-          public void onClick(DialogInterface dialogInterface, int i) {
-               notes.remove(itemToDelete);
-               noteAdapter.notifyDataSetChanged();
-               SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.note", Context.MODE_PRIVATE);
-               Gson gson = new Gson();
-               String json =gson.toJson(MainActivity.notes);
-               sharedPreferences.edit().putString("note",json).apply();
-                                }
-                            }).setNegativeButton("No", null).show();
-
-                    return true;
-                }
-            });
-    }
-*/
 
     }
     // Return true if data is retrieved , else if not data is stored locally return false //
@@ -158,13 +107,15 @@ public class MainActivity extends AppCompatActivity {
       }*/
 
 
-     void setupRecycleView(){
+    private void setupRecycleView(){
         Notes= retrieveDataFromFirestore();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
         noteAdapter=new NoteAdapter(this,Notes_Firebase);
+        recyclerView.setHasFixedSize(false);
 
-        recyclerView.setAdapter(noteAdapter);}
+        recyclerView.setAdapter(noteAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+     }
 
 
     public void add_note(View view) {
@@ -175,12 +126,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        noteAdapter.notifyDataSetChanged();
-    }
 }
