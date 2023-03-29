@@ -1,8 +1,6 @@
 package com.example.tonote;
 
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import com.google.firebase.Timestamp;
 
 import java.util.Objects;
 
@@ -10,22 +8,25 @@ public class Note  {
 
         private String note_text ;
         private String header ;
-        private String Date ;
+        private Timestamp timestamp ;
 
-    public String getDate() {
-        return Date;
-    }
 
-    public void setDate(String date) {
-        this.Date = date;
+
+
+
+    public void setTimestamp(Timestamp Timestamp) {
+        this.timestamp = Timestamp;
     }
 
     public Note(){}
-        public Note(String note_text, String header,String Date) {
+
+
+    public Note(String note_text, String header, Timestamp Timestamp)
+    {
             this.note_text = note_text;
             this.header = header;
-            this.Date= Date;
-        }
+            this.timestamp= Timestamp;
+    }
 
 
     public String getnote_text() {
@@ -44,19 +45,25 @@ public class Note  {
         this.header = header;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note = (Note) o;
-        return Objects.equals(note_text, note.note_text) && Objects.equals(header, note.header) && Objects.equals(Date, note.Date);
+        return Objects.equals(note_text, note.note_text) && Objects.equals(header, note.header) && Objects.equals(timestamp, note.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(note_text, header, Date);
+        return Objects.hash(note_text, header, timestamp);
     }
+
+   
 }
 

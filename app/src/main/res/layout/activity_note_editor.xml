@@ -52,11 +52,11 @@
         android:ems="12"
         android:fontFamily="@font/roboto"
         android:gravity="start"
-
+        android:textStyle="bold"
         android:hint=" Title"
         android:inputType="text"
         android:maxLines="1"
-        android:padding="6dp"
+        android:padding="10dp"
         android:textColorHint="#757575"
         android:textSize="26sp" />
 

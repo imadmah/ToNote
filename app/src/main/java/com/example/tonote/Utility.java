@@ -4,7 +4,7 @@ import static android.content.ContentValues.TAG;
 
 
 import static com.example.tonote.MainActivity.Notes_Firebase;
-import static com.example.tonote.MainActivity.Notes_local;
+
 
 import android.content.Context;
 import android.graphics.Color;
@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -28,7 +29,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.model.Document;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Utility {
@@ -66,35 +71,14 @@ public class Utility {
         }
     }
 
-    static ArrayList<Note_Doc> retrieveDataFromFirestore (){
-        ArrayList<Note_Doc> notes = new ArrayList<>();
-        CollectionReference collection = getCollectionReferenceForNotes();
 
-        try {
-            collection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                    if (task.isSuccessful()) {
-                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                        for (DocumentSnapshot document : documents) {
-                            notes.add(new Note_Doc(document.toObject(Note.class),document.getId()));
-                            Notes_Firebase.add(document.toObject(Note.class));
-                        }
-
-                    }
-                    else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                }
-            });
-        }
-        catch (Exception e){
-            Log.println(Log.ERROR,"ERROR","RecycleView Not set");
-        }
-        return notes;
+    public static Timestamp convertStringToTimestamp(String dateString) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = simpleDateFormat.parse(dateString);
+        Timestamp timestamp = new Timestamp(date);
+        return timestamp;
     }
-
 
 
 }
