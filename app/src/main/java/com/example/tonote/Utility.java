@@ -71,8 +71,6 @@ public class Utility {
         }
     }
 
-
-
     public static Timestamp convertStringToTimestamp(String dateString) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = simpleDateFormat.parse(dateString);

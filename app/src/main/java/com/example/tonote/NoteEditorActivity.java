@@ -121,7 +121,7 @@ public class NoteEditorActivity extends AppCompatActivity {
           }
 
 
-      }
+    }
 
     private void SaveNoteInFireBase(Note note) {
         DocumentReference documentReference;

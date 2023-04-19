@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.Objects;
 
-public class Note  {
+public class Note implements Comparable<Note> {
 
         private String note_text ;
         private String header ;
@@ -64,6 +64,10 @@ public class Note  {
         return Objects.hash(note_text, header, timestamp);
     }
 
-   
+
+    @Override
+    public int compareTo(Note note) {
+        return 0;
+    }
 }
 
