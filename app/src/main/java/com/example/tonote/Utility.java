@@ -43,13 +43,14 @@ public class Utility {
         Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
     }
 
+    @NonNull
     static CollectionReference getCollectionReferenceForNotes(){
         FirebaseUser CurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         return FirebaseFirestore.getInstance().collection("notes")
                 .document(CurrentUser.getUid()).collection("my_notes");
     }
 
-    static void AdjustHeaderContent (TextView header, TextView content){
+    static void AdjustHeaderContent (@NonNull TextView header, TextView content){
         if(header.getText().toString().isEmpty()) {
             header.setVisibility(View.GONE);
             content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -71,6 +72,7 @@ public class Utility {
         }
     }
 
+    @NonNull
     public static Timestamp convertStringToTimestamp(String dateString) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = simpleDateFormat.parse(dateString);

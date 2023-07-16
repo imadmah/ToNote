@@ -2,9 +2,11 @@
     <!-- Base application theme. -->
         <style name="Theme.ToNote" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#D0B8A8</item>
+        <item name="colorPrimary">@color/white_yellow</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
+
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/mycolor</item>
         <item name="colorSecondaryVariant">@color/white</item>

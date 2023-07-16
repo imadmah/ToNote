@@ -10,11 +10,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,15 +35,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-  static   NoteAdapter noteAdapter;
-    //LIST OF NOTES THAT RETRIEVED FROM FIREBASE //
-    //                                           //
-    static ArrayList<Note_Doc>  Notes = new ArrayList<>();
+    static   NoteAdapter noteAdapter;
+    // LIST OF NOTES THAT RETRIEVED FROM FIREBASE //
+
+    static ArrayList<Note_Doc> Notes = new ArrayList<>();
+
+    Query query = getCollectionReferenceForNotes();
     static ArrayList<Note>  Notes_Firebase = new ArrayList<>();
     private final CollectionReference collection = getCollectionReferenceForNotes();
     RecyclerView recyclerView;
@@ -93,52 +92,40 @@ public class MainActivity extends AppCompatActivity {
 
 
             case R.id.bytitle:
-                if(!isInternetAvailable(getApplicationContext())) {
-                    Collections.sort(Notes_Firebase, new Comparator<Note>() {
-                        @Override
-                        public int compare(Note note1, Note note2) {
-                            return note1.getHeader().toLowerCase().compareTo(note2.getHeader().toLowerCase()); //compareTo differentiate between lowercase and uppercase//
-                        }
+                if(isInternetAvailable(getApplicationContext())) {
+                    Collections.sort(Notes_Firebase, (note1, note2) -> {
+                        return note1.getHeader().toLowerCase().compareTo(note2.getHeader().toLowerCase()); //compareTo differentiate between lowercase and uppercase//
                     });
-                    Collections.sort(Notes, new Comparator<Note_Doc>() {
-                        @Override
-                        public int compare(Note_Doc note_doc, Note_Doc t1) {
-                            return note_doc.getNote().getHeader().toLowerCase().compareTo(t1.getNote().getHeader().toLowerCase());
-                        }
-                    });}
+                    Collections.sort(Notes, (note_doc, t1) ->
+                            note_doc.getNote().getHeader().toLowerCase().compareTo(t1.getNote().getHeader().toLowerCase()));}
                 else
                 {
-                  collection.orderBy("header", Query.Direction.ASCENDING);
+
+                   query = collection.orderBy("header", Query.Direction.DESCENDING);
                   Notes_Firebase.clear();
                   Notes.clear();
                   RetrieveDataFromFirestore();
                 }
                 noteAdapter.notifyDataSetChanged();
-                return true;
+                return query != null;
 
 
 
             case R.id.bydate:
-                if(!isInternetAvailable(getApplicationContext())) {
-                    Collections.sort(Notes_Firebase, new Comparator<Note>() {
-                        @Override
-                        public int compare(Note note1, Note note2) {
-                            return note1.getTimestamp().compareTo(note2.getTimestamp());
-                        }
-
-                    });
-                    Collections.sort(Notes, new Comparator<Note_Doc>() {
-                        @Override
-                        public int compare(Note_Doc note_doc, Note_Doc t1) {
-                            return note_doc.getNote().getTimestamp().compareTo(t1.getNote().getTimestamp());
-                        }
-                    });}
+                if(isInternetAvailable(getApplicationContext())) {
+                    Collections.sort(Notes_Firebase, (note1, note2) ->
+                            note1.getTimestamp().compareTo(note2.getTimestamp()));
+                    Collections.sort(Notes, (note_doc, t1) ->
+                            note_doc.getNote().getTimestamp().compareTo(t1.getNote().getTimestamp()));}
                 else
                 {
-                    collection.orderBy("timestamp",Query.Direction.ASCENDING);
-                    Notes_Firebase.clear();
-                    Notes.clear();
-                    RetrieveDataFromFirestore();
+
+                    query = collection.orderBy("timestamp", Query.Direction.DESCENDING);
+                        Notes_Firebase.clear();
+                        Notes.clear();
+                        RetrieveDataFromFirestore();
+
+
                 }
 
 
@@ -146,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO : Fix when The sort of Note_doc//
                 noteAdapter.notifyDataSetChanged();
 
-                return true;
+                return query != null;
 
         }
 
@@ -159,13 +146,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SearchView searchView = findViewById(R.id.search_bar);
+        androidx.appcompat.widget.SearchView searchView = findViewById(R.id.search_bar);
         recyclerView = findViewById(R.id.recycle_view);
-         progressBar = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
 
         searchView.setIconifiedByDefault(true); // show search icon in expanded state
         searchView.setQueryHint("Search notes"); // set hint text
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -212,10 +201,16 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    private void orderby_sequentiel(final MyCallback callback)
+    {
+        collection.orderBy("timestamp", Query.Direction.ASCENDING);
+        callback.onMethodFinish();
+    }
+
     private void RetrieveDataFromFirestore()
     {   progressBar.setVisibility(View.VISIBLE);
 
-        collection.get().addOnCompleteListener((Task<QuerySnapshot> task) -> {
+        query.get().addOnCompleteListener((Task<QuerySnapshot> task) -> {
             progressBar.setVisibility(View.GONE);
             if (task.isSuccessful()) {
                 List<DocumentSnapshot> documents = task.getResult().getDocuments();
@@ -239,14 +234,14 @@ public class MainActivity extends AppCompatActivity {
             Network network = cm.getActiveNetwork();
             if (network != null) {
                 NetworkCapabilities nc = cm.getNetworkCapabilities(network);
-                return nc != null && (nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+                return nc == null || (!nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) && !nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
             }
         }
-        return false;
+        return true;
     }
 
 
-
-
-
+}
+interface MyCallback {
+    void onMethodFinish();
 }

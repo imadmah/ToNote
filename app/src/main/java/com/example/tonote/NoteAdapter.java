@@ -32,7 +32,7 @@ import java.util.Date;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     Context context;
     ArrayList<Note> list ;
-    private Filter noteFilter =new NoteFilter();
+    private final Filter noteFilter =new NoteFilter();
 
 
     public NoteAdapter(Context context,ArrayList<Note> list ) {

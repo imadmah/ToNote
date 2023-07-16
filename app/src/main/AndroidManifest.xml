@@ -9,8 +9,6 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/iconnn"
         android:label="ToNote"
-
-
         android:roundIcon="@mipmap/iconn"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToNote"
