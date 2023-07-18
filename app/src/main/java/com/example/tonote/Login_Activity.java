@@ -1,8 +1,5 @@
 package com.example.tonote;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -12,10 +9,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class Login_Activity extends AppCompatActivity {
     EditText PasswordEditText,emailEditText;
@@ -47,23 +45,20 @@ public class Login_Activity extends AppCompatActivity {
     private void LoginInFirebase(String email,String password) {
         changeInprogress(true);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                changeInprogress(false);
-                if(task.isSuccessful()){
-                    //Login successfully
-                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
-                        Utility.ShowToast(Login_Activity.this,"Login successfully"); // for simplifying throwing toasts we implement ShowToast
-                        startActivity(new Intent(Login_Activity.this,MainActivity.class));
-                    }
-                    else {
-                        Utility.ShowToast(Login_Activity.this,"Email not verified,Please verify Your email");
-                    }
+        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+            changeInprogress(false);
+            if(task.isSuccessful()){
+                //Login successfully
+                if(Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()){
+                    Utility.ShowToast(Login_Activity.this,"Login successfully"); // for simplifying throwing toasts we implement ShowToast
+                    startActivity(new Intent(Login_Activity.this,MainActivity.class));
                 }
                 else {
-                    Utility.ShowToast(Login_Activity.this,task.getException().getLocalizedMessage());
+                    Utility.ShowToast(Login_Activity.this,"Email not verified,Please verify Your email");
                 }
+            }
+            else {
+                Utility.ShowToast(Login_Activity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage());
             }
         });
     }

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -156,18 +155,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        noteAdapter.notifyDataSetChanged();
-        SaveData();
-
-
-    }
     private boolean Note_empty(Note note ){
         return note.getHeader().equals("") && note.getnote_text().equals("");
     }
-
     private boolean Note_exist(Note note){
         for (Note NoteCompared :Notes_Firebase ) {
             if(NoteCompared.equals(note)) return true;
@@ -190,6 +180,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            assert date != null;
             note_date.setText(WrittenDateFormat.format(date));
         }
 
@@ -204,5 +195,12 @@ public class NoteEditorActivity extends AppCompatActivity {
         dateString = intent.getStringExtra("Date");
         position = intent.getIntExtra("Position", -1);
         //
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        noteAdapter.notifyDataSetChanged();
+        SaveData();
     }
 }

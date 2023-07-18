@@ -1,14 +1,11 @@
 package com.example.tonote;
 
 import static android.content.ContentValues.TAG;
-
-
 import static com.example.tonote.Utility.getCollectionReferenceForNotes;
 
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -35,8 +32,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -77,15 +75,12 @@ public class MainActivity extends AppCompatActivity {
                         .setIcon(R.drawable.logout_icon)
                         .setTitle("Are you sure?")
                         .setMessage("       Do you want to Sign out ")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                FirebaseAuth.getInstance().signOut();
-                                Notes_Firebase.clear();
-                                Notes.clear();
-                                startActivity(new Intent(MainActivity.this,Login_Activity.class));
-                                finish();
-                            }
+                        .setPositiveButton("Yes", (dialogInterface, i) -> {
+                            FirebaseAuth.getInstance().signOut();
+                            Notes_Firebase.clear();
+                            Notes.clear();
+                            startActivity(new Intent(MainActivity.this,Login_Activity.class));
+                            finish();
                         }).setNegativeButton("No", null).show();
 
                 return true;
@@ -201,11 +196,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    private void orderby_sequentiel(final MyCallback callback)
-    {
-        collection.orderBy("timestamp", Query.Direction.ASCENDING);
-        callback.onMethodFinish();
-    }
 
     private void RetrieveDataFromFirestore()
     {   progressBar.setVisibility(View.VISIBLE);
@@ -218,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DocumentSnapshot document : documents)
                 {
                     Notes_Firebase.add(document.toObject(Note.class));
-                    Notes.add(new Note_Doc(document.toObject(Note.class) ,document.getId()));
+                    Notes.add(new Note_Doc(Objects.requireNonNull(document.toObject(Note.class)),document.getId()));
                     noteAdapter.notifyDataSetChanged();
                 }
 
@@ -242,6 +232,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
-interface MyCallback {
-    void onMethodFinish();
-}
+
