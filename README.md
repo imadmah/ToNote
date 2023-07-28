@@ -1,5 +1,5 @@
 # ToNote
-ToNote is a simple note-taking app that uses Firebase for authentication and Gmail verification.
+ToNote is a simple note-taking app that uses Firebase for authentication and Gmail verification, i made as personal project and my own note app since it uses firebase your notes are always backed up even if you forgot your account . 
 
 Installation
 To use ToNote, you must first set up a Firebase project and enable Firebase Authentication. Once you have created a Firebase project and enabled Firebase Authentication, you can clone this repository and open it in Android Studio.
