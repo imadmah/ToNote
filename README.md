@@ -19,7 +19,7 @@ implementation 'com.google.firebase:firebase-database:20.1.0'
 ToNote allows users to create, edit, and delete notes. Users must first sign in with their Google account and verify their email address. Once signed in, users can view and manage their notes in the app.
 
 # Contributing
-To contribute to ToNote, please create a pull request with your changes. Before submitting a pull request, please make sure your code is well-tested and follows the project's coding standards.
+To contribute to ToNote, please create a pull request with your changes, For Anyone who wants to add a features or fix something you are very welcome to do so
 
 # License
 ToNote is released under the MIT License.
