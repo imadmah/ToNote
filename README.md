@@ -7,9 +7,12 @@ To use ToNote, you must first set up a Firebase project and enable Firebase Auth
 To use the required Firebase libraries, add the following dependencies to your project's build.gradle file:
 
 
-implementation 'com.google.firebase:firebase-auth:19.2.0'
+implementation 'com.google.firebase:firebase-auth:19.2.0'  
+
 implementation 'com.google.firebase:firebase-firestore:24.4.0'
+
 implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
+
 implementation 'com.google.firebase:firebase-database:20.1.0'
 
 # Usage
