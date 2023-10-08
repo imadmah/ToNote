@@ -3,12 +3,13 @@
         <style name="Theme.ToNote" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white_yellow</item>
+
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
 
 
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/mycolor</item>
+            <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/grey</item>
         <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

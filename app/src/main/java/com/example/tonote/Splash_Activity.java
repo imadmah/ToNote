@@ -23,4 +23,5 @@ public class Splash_Activity extends AppCompatActivity {
             finish();
         }, 1000);
     }
+
 }

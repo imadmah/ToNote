@@ -10,10 +10,6 @@ public class Note implements Comparable<Note> {
         private String header ;
         private Timestamp timestamp ;
 
-
-
-
-
     public void setTimestamp(Timestamp Timestamp) {
         this.timestamp = Timestamp;
     }

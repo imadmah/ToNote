@@ -145,16 +145,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycle_view);
         progressBar = findViewById(R.id.progress_bar);
 
-        searchView.setIconifiedByDefault(true); // show search icon in expanded state
+
         searchView.setQueryHint("Search notes"); // set hint text
-
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 // use filter to update adapter with filtered notes
@@ -162,11 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         RetrieveDataFromFirestore();
         setupRecycleView();
-
-
 
     }
 
@@ -177,9 +171,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteAdapter=new NoteAdapter(this,Notes_Firebase);
         recyclerView.setAdapter(noteAdapter);
-
         noteAdapter.notifyDataSetChanged();
-
 
      }
 

@@ -38,11 +38,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public NoteAdapter(Context context,ArrayList<Note> list ) {
         this.list=list;
         this.context=context;
-
     }
 
         @Override
-        public void onBindViewHolder(@NonNull NoteViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position)
         {
             if(list!=null)
             {
@@ -88,12 +87,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         notifyDataSetChanged();
     }
 
-
     @Override
     public int getItemCount() {
         return list.size();
     }
-
 
     public Filter getFilter() {
         return noteFilter;
@@ -113,7 +110,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
 
     }
-
 
     private class NoteFilter extends Filter {
         ArrayList<Note> filteredNotes ;
@@ -156,5 +152,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         }
     }
+
 }
 

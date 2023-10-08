@@ -36,8 +36,6 @@ public class Utility {
             header.setVisibility(View.GONE);
             content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             content.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            content.setTextColor(Color.parseColor("#000000"));
-
         }
         else{
             header.setVisibility(View.VISIBLE);
