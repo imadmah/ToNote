@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ToNote</string>
+    <string name="bydatecreated">ByDateCreated</string>
+    <string name="bytitle">ByTitle</string>
+    <string name="logout">Logout</string>
+    <string name="sort">Sort</string>
+    <string name="add_note">Add note</string>
 </resources>

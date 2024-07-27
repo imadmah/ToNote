@@ -3,17 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NoteEditorActivity"
     android:orientation="vertical"
-    android:layout_marginHorizontal="6dp"
-    android:layout_marginVertical="6dp"
+
     android:gravity="center">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="6dp"
         >
 
     <TextView
@@ -56,6 +65,8 @@
         android:textStyle="bold"
         android:hint=" Title"
         android:inputType="text"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="6dp"
         android:maxLines="1"
         android:padding="10dp"
         android:textColorHint="#757575"
@@ -70,6 +81,8 @@
         android:background="@drawable/note_background"
         android:fontFamily="@font/roboto"
         android:gravity="top|start"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="6dp"
         android:hint="  type here"
         android:inputType="textMultiLine"
         android:padding="12dp"

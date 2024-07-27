@@ -23,6 +23,12 @@ public class Note implements Comparable<Note> {
             this.header = header;
             this.timestamp= Timestamp;
     }
+    public Note(String note_text, String header )
+    {
+        this.note_text = note_text;
+        this.header = header;
+
+    }
 
 
     public String getnote_text() {
