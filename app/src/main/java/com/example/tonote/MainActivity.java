@@ -13,6 +13,8 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.add_note_menu, menu);
+        // Get the theme and color for menu items
+
         return super.onCreateOptionsMenu(menu);
     }
 
